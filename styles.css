@@ -1,0 +1,97 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 100px;
+    padding: 0;
+}
+
+h1 {
+    color: #72132e!important;
+    font-weight: bold !important; /* 設定為粗體字 */
+}
+
+form {
+    margin-top: 20px;
+}
+
+label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    padding: 10px 15px;
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #4cae4c;
+}
+.row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#floatboxbut {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    background-color: rgba(179, 0, 0, 0.8);
+    z-index: 999; /* 確保它在其他元素之上 */
+    margin-bottom: 50px;
+}
+.floatboxbut {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    background-color: rgb(96 0 5);
+    z-index: 999; /* 確保它在其他元素之上 */
+    color: #FAB702;
+    font-size: 12px;
+}
+
+
+.card {
+    margin-bottom: 100px; /* 與底部距離100px */
+    
+}
+
+.btn{
+    border-radius: 50%;
+    background-color: #72132e;
+    border-radius: 2rem !important; /* 使用 !important 以提高優先權 */
+
+}
+
+#appointment-form{
+    color: #72132e;
+}
+
+
+.baba6688 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    height: 100vh; /* full height of the viewport */
+}
+
+.navbar{
+background-color: #666666;
+}
+

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+      <!-- three.js -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js"></script>
+      <script src="https://unpkg.com/three@0.126.0/examples/js/loaders/GLTFLoader.js"></script>
+      <script src="https://unpkg.com/three@0.126.0/examples/js/controls/OrbitControls.js"></script>
+  
+    <style>
+        /* three.js */
+        /* Reset CSS */
+        *,
+        *::after,
+        *::before {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        body {
+            overflow: hidden;
+            background-color: #949494;
+            cursor: grab;
+        }
+
+        .webgl {
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        /* 按鈕 */
+        .button-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1;
+        }
+
+        .button-container button {
+            display: block;
+            margin: 10px;
+            padding: 5px;
+            cursor: pointer;
+            border-radius: 20px;
+            border: none;
+        }
+
+        .button-container button:hover {
+            display: block;
+            margin: 10px;
+            padding: 5px;
+            cursor: pointer;
+            border-radius: 20px;
+            border: none;
+            background-color: rgb(0, 59, 24);
+            color: white;
+        }
+    </style>
+
+</head>
+
+<body>
+    <!-- 虛擬展間 -->
+    <canvas class="webgl"></canvas>
+    <div class="button-container">
+        <button id="resetView">初始視角</button>
+        <button id="frontView">前視圖</button>
+        <button id="backView">後視圖</button>
+        <button id="leftView">左視圖</button>
+        <button id="rightView">右視圖</button>
+        <button id="topView">上視圖</button>
+        <button id="bottomView">下視圖</button>
+    </div>
+
+   
+    <script>
+        const canvas = document.querySelector('.webgl')
+        const scene = new THREE.Scene()
+        const textureLoader = new THREE.TextureLoader()
+        const sizes = {
+            width: window.innerWidth,
+            height: window.innerHeight
+        }
+
+        // Base camera
+        const camera = new THREE.PerspectiveCamera(10, sizes.width / sizes.height, 0.1, 100)
+        camera.position.x = 18
+        camera.position.y = 8
+        camera.position.z = 20
+        scene.add(camera)
+
+        //Controls
+        const controls = new THREE.OrbitControls(camera, canvas)
+        controls.enableDamping = true
+        controls.enableZoom = true
+        controls.enablePan = false
+        // controls.minDistance = 20
+        // controls.maxDistance = 40
+        // controls.minPolarAngle = Math.PI / 4 //代表 45 度
+        // controls.maxPolarAngle = Math.PI / 2 //代表 90 度
+        // controls.minAzimuthAngle = - Math.PI / 80 //表示最小的水平角度，
+        // controls.maxAzimuthAngle = Math.PI / 2.5 // 是最大水平角度。
+
+        // 設置無限制的瀏覽角度
+        controls.minPolarAngle = 0; // 完全自由的垂直旋轉
+        controls.maxPolarAngle = Math.PI; // 完全自由的垂直旋轉
+        controls.minAzimuthAngle = -Infinity; // 無限制
+        controls.maxAzimuthAngle = Infinity; // 無限制
+
+        // Renderer
+        const renderer = new THREE.WebGLRenderer({
+            canvas: canvas,
+            antialias: true,
+            alpha: true
+        })
+
+        renderer.setSize(sizes.width, sizes.height)
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+        renderer.outputEncoding = THREE.sRGBEncoding
+
+        // Materials
+        const bakedTexture = textureLoader.load('https://rawcdn.githack.com/ricardoolivaalonso/ThreeJS-Room05/ae27bdffd31dcc5cd5a919263f8f1c6874e05400/baked.jpg')
+        bakedTexture.flipY = false
+        bakedTexture.encoding = THREE.sRGBEncoding
+
+        const bakedMaterial = new THREE.MeshBasicMaterial({
+            map: bakedTexture,
+            side: THREE.DoubleSide,
+        })
+
+        //Loader
+        const loader = new THREE.GLTFLoader()
+        loader.load('https://rawcdn.githack.com/ricardoolivaalonso/ThreeJS-Room05/ae27bdffd31dcc5cd5a919263f8f1c6874e05400/model.glb',
+            (gltf) => {
+                const model = gltf.scene
+                model.traverse(child => child.material = bakedMaterial)
+                scene.add(model)
+            },
+            (xhr) => {
+                console.log((xhr.loaded / xhr.total * 100) + '% loaded')
+            }
+        )
+
+
+        window.addEventListener('resize', () => {
+            sizes.width = window.innerWidth
+            sizes.height = window.innerHeight
+            camera.aspect = sizes.width / sizes.height
+            camera.updateProjectionMatrix()
+            renderer.setSize(sizes.width, sizes.height)
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+        })
+        // Animation
+        const tick = () => {
+            controls.update()
+            renderer.render(scene, camera)
+            window.requestAnimationFrame(tick)
+        }
+
+        tick()
+
+
+        // 不同視圖按鈕
+        // 設置初始相機視角
+        const initialPosition = {
+            x: 18,
+            y: 8,
+            z: 20
+        };
+
+        // 回復初始視角
+        document.getElementById('resetView').addEventListener('click', () => {
+            camera.position.set(initialPosition.x, initialPosition.y, initialPosition.z);
+            camera.lookAt(new THREE.Vector3(0, 0, 0)); // 使相機看向場景中心
+        });
+
+        // 前視圖
+        document.getElementById('frontView').addEventListener('click', () => {
+            camera.position.set(0, 0, 20);  // 設置相機在 Z 軸的前方
+            camera.lookAt(new THREE.Vector3(0, 0, 0));
+        });
+
+        // 後視圖
+        document.getElementById('backView').addEventListener('click', () => {
+            camera.position.set(0, 0, -20);  // 設置相機在 Z 軸的後方
+            camera.lookAt(new THREE.Vector3(0, 0, 0));
+        });
+
+        // 左視圖
+        document.getElementById('leftView').addEventListener('click', () => {
+            camera.position.set(-20, 0, 0);  // 設置相機在 X 軸的左邊
+            camera.lookAt(new THREE.Vector3(0, 0, 0));
+        });
+
+        // 右視圖
+        document.getElementById('rightView').addEventListener('click', () => {
+            camera.position.set(20, 0, 0);  // 設置相機在 X 軸的右邊
+            camera.lookAt(new THREE.Vector3(0, 0, 0));
+        });
+
+        // 上視圖
+        document.getElementById('topView').addEventListener('click', () => {
+            camera.position.set(0, 20, 0);  // 設置相機在 Y 軸的上方
+            camera.lookAt(new THREE.Vector3(0, 0, 0));
+        });
+
+        // 下視圖
+        document.getElementById('bottomView').addEventListener('click', () => {
+            camera.position.set(0, -20, 0);  // 設置相機在 Y 軸的下方
+            camera.lookAt(new THREE.Vector3(0, 0, 0));
+        });
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,65 @@
+@import 'bootstrap';
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 100px;
+    padding: 0;
+
+    h1 {
+        color: #333;
+    }
+
+    form {
+        margin-top: 20px;
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+
+            &:hover {
+                background-color: #4cae4c;
+            }
+        }
+    }
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.floatboxbut {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    background-color: rgba(179, 0, 0, 0.902);
+    z-index: 1000; // 確保它在其他元素之上
+}
+
+.card {
+    margin-bottom: 100px; // 與底部距離100px
+}
+
+.btn {
+    border-radius: 50%;
+    background-color: #72132e;
+}
