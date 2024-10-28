@@ -60,9 +60,9 @@
         <button id="rightView">右視圖</button>
         <button id="topView">上視圖</button>
         <select id="bgColorSelector">
-            <option value="#000000">Black</option>
-            <option value="#808080">Gray</option>
             <option value="#FFFFFF">White</option>
+            <option value="#808080">Gray</option>
+            <option value="#000000">Black</option>
         </select>
     </div>
 
@@ -93,10 +93,17 @@
         const bakedMaterial = new THREE.MeshBasicMaterial({ map: bakedTexture, side: THREE.DoubleSide });
 
         const loader = new THREE.GLTFLoader();
-        loader.load('https://rawcdn.githack.com/ricardoolivaalonso/ThreeJS-Room05/ae27bdffd31dcc5cd5a919263f8f1c6874e05400/model.glb', (gltf) => {
+        loader.load('model.glb', (gltf) => {
             gltf.scene.traverse(child => child.material = bakedMaterial);
             scene.add(gltf.scene);
         });
+
+        // 使用 GLTFLoader 加載模型// 不更改材質，保留原始材質
+        // const loader = new THREE.GLTFLoader();
+        // loader.load('scene.glb', (gltf) => {
+        //     scene.add(gltf.scene);
+        // });
+
 
         // Resize listener
         window.addEventListener('resize', () => {
